@@ -108,7 +108,7 @@ loadprogs() { \
 		if [ ! -z "$optionals" ]; then
 			optionallist="$optionallist \"$program\" \"$comment\" \"$optionals\""
 		else
-			echo "$tag,$program,$comment,$stowdir" >> /tmp/progs_filtered.csv
+			echo "$tag,$program,$stowdir,$comment" >> /tmp/progs_filtered.csv
 		fi
 	done < /tmp/progs.csv
 	eval "dialog --title \"NARB Installation\" --separate-output --checklist \"Select optional programs.\" 45 80 8$optionallist" 1>&2 2>/tmp/prog_opts 3>&1
@@ -117,7 +117,7 @@ loadprogs() { \
 	while IFS=, read -r tag program optionals stowdir comment; do
 		if grep -xq "$program" /tmp/prog_opts; then
 			echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
-			echo "$tag,$program,$comment,$stowdir" >> /tmp/progs_filtered.csv
+			echo "$tag,$program,$stowdir,$comment" >> /tmp/progs_filtered.csv
 		fi
 	done < /tmp/progs.csv
 	}
@@ -125,7 +125,7 @@ loadprogs() { \
 installationloop() { \
 	total=$(wc -l < /tmp/progs_filtered.csv)
 	aurinstalled=$(pacman -Qqm)
-	while IFS=, read -r tag program comment stowdir; do
+	while IFS=, read -r tag program stowdir comment; do
 		n=$((n+1))
 		[ ! -z "$stowdir" ] && tostow="$tostow $stowdir"
 		echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
