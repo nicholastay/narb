@@ -18,7 +18,7 @@ installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
 error() { clear; printf "ERROR:\\n%s\\n" "$1"; exit;}
 
 welcomemsg() { \
-	dialog --title "Welcome!" --msgbox "Welcome to Luke's Auto-Rice Bootstrapping Script!\\n\\nThis script will automatically install a fully-featured Linux desktop, which I use as my main machine.\\n\\n-Luke" 10 60
+	dialog --title "Welcome!" --msgbox "Welcome to Nick's Auto Rice Bootstrapper!\\n\\nThis script will automatically install a hopefully working Linux desktop, which I use as my main machine.\\n\\n-Nick" 10 60
 	}
 
 getuserandpass() { \
