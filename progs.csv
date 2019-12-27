@@ -1,82 +1,88 @@
-#TAG,NAME IN REPO (or git url),PURPOSE (should be a verb phrase to sound right while installing)
-,i3-gaps,"is the main graphical user interface and window manager."
-,xorg-server,"is the graphical server."
-,xorg-xwininfo,"allows querying information about windows."
-,xorg-xinit,"starts the graphical server."
-V,xorg-minimal,"is the graphical server."
-V,xorg-fonts,"is a font package."
-V,libX11-devel,"is required for the compilation of some programs."
-,sxhkd,"binds keys."
-I,libXft-devel,"is required for the compilation of some programs."
-I,gcr-devel,"is required for the compilation of some programs."
-I,fontconfig-devel,"is required for the compilation of some programs."
-,ttf-inconsolata,"is the monospace font of LARBS."
-,ttf-linux-libertine,"provides the sans and serif fonts for LARBS."
-A,ranger-git,"is an extensive terminal file manager that everyone likes."
-,arandr,"is a UI for screen adjustment."
-,bc,"is used for a dropdown calculator."
-,calcurse,"is a lightweight terminal-based calendar."
-,xcompmgr,"is for transparency and removing screen-tearing."
-,xorg-xprop,"is a tool for detecting window properties."
-V,xprop,"is a tool for detecting window properties."
-,dosfstools,"allows your computer to access dos-like filesystems."
-,libnotify,"allows desktop notifications."
-V,dbus,"facilitates inter-process communication."
-,dunst,"is a suckless notification system."
-,exfat-utils,"allows management of FAT drives."
-,sxiv,"is a minimalist image viewer."
-,xwallpaper,"sets the wallpaper."
-,ffmpeg,"can record and splice video and audio on the command line."
-,gnome-keyring,"serves as the system keyring."
-A,gtk-theme-arc-gruvbox-git,"gives the dark GTK theme used in LARBS."
-,neovim,"a tidier vim with some useful features"
-,i3blocks,"is the status bar."
-,mpd,"is a lightweight music daemon."
-,mpc,"is a terminal interface for mpd."
-,mpv,"is the patrician's choice video player."
-,ncmpcpp,"a ncurses interface for music with multiple formats and a powerful tag editor."
-,newsboat,"is a terminal RSS client."
-A,brave-bin,"is an elegant browser with built-in adblocking, tor and other features."
-,ttf-joypixels,"is a package that gives the system unicode symbols and emojis used in the status bar and elsewhere."
-V,font-symbola,"provides unicode and emoji symbols."
-A,ttf-symbola,"provides unicode and emoji symbols."
-,ntfs-3g,"allows accessing NTFS partitions."
-,alsa-utils,"is an audio interface for ALSA."
-A,sc-im,"is an Excel-like terminal spreadsheet manager."
-,maim,"can take quick screenshots at your request."
-,socat,"is a socket utility."
-,tmux,"is a terminal multiplexer and the dropdown window in LARBS."
-,unclutter,"hides an inactive mouse."
-V,unclutter-xfixes,"hides an inactive mouse."
-,unrar,"extracts rar's."
-,unzip,"unzips zips."
-,lynx,"is a terminal browser which can also view images."
-,xcape,"gives the special escape/super mappings of LARBS."
-,xclip,"allows for copying and pasting from the command line."
-,xdotool,"provides window action utilities on the command line."
-,xorg-xdpyinfo,"aids with resolution determination and screen recording."
-V,xdpyinfo,"aids with resolution determination and screen recording."
-,youtube-dl,"can download any YouTube video (or playlist or channel) when given the link."
-,zathura,"is a pdf viewer with vim-like bindings."
-,zathura-pdf-mupdf,"allows mupdf pdf compatibility in zathura."
-A,python-ueberzug,"generates image previews in ranger and other terminal programs."
-,poppler,"manipulates .pdfs and gives .pdf previews and other .pdf functions."
-,mediainfo,"shows audio and video information."
-,atool,"manages and gives information about archives."
-,fzf,"is a fuzzy finder tool."
-,highlight,"can highlight code output."
-,xorg-xbacklight,"enables changing screen brightness levels."
-,zsh-syntax-highlighting,"provides fish-like syntax highlighting in the shell."
-A,task-spooler,"queues commands or files for download."
-V,ts,"queues commands or files for download."
-A,simple-mtpfs,"enables the mounting of cell phones."
-V,simple-mtpfs,"enables the mounting of cell phones."
-V,setxkbmap,"allows LARBS's unique keyboard bindings."
-V,xmodmap,"allows LARBS's unique keyboard bindings."
-V,xsetroot,"sets status bar and other X properies."
-V,xset,"allows speeding up the X rate."
-G,https://github.com/LukeSmithxyz/dwmblocks.git,"serves as the modular status bar."
-G,https://github.com/lukesmithxyz/dmenu.git,"runs commands and provides a UI for selection."
-G,https://github.com/lukesmithxyz/st.git,"is my custom build of suckless's terminal emulator."
-G,https://github.com/lukesmithxyz/dwm.git,"is the window manager."
-,slock,"allows you to lock your computer, and quickly unlock with your password."
+#TAG,NAME IN REPO (or git url),PURPOSE (should be a verb phrase to sound right while installing),OPTIONAL DEFAULT,STOW DIRECTORY,
+,i3-gaps,,i3,is the main graphical user interface and window manager.,
+,xorg-server,,x,is the graphical server.,
+,xorg-xwininfo,,,allows querying information about windows.,
+,xorg-xinit,,,starts the graphical server.,
+,sxhkd,,,binds keys.,
+,pulseaudio,on,,is the audio server of NARB.,
+,pulseaudio-alsa,on,,supports PulseAudio.,
+,rxvt-unicode,,,is the terminal emulator of NARB.,
+,urxvt-resize-font-git,,,allows the terminal font to be resized on-the-fly.,
+,openssh,,,allows SSH connections.,
+,ttf-inconsolata,,,is the monospace font of NARB.,
+,ttf-linux-libertine,,,provides the sans and serif fonts for NARB.,
+,ttf-font-awesome,,,"provides icons, mainly for the status bar.",
+,wqy-microhei,on,,is the Chinese font of NARB.,
+A,ttf-nanum,on,,is the Korean font of NARB.,
+A,ttf-nanumgothic_coding,on,,is the Korean terminal font of NARB.,
+,noto-fonts-cjk,on,,is the CJK language pack to ensure all East Asian characters can be read.,
+A,ranger-git,on,ranger,is an extensive terminal file manager that everyone likes.,
+,arc-gtk-theme,,,is the GTK theme of NARB.,
+,arandr,on,,is a UI for screen adjustment.,
+,picom,,picom,"is the compositor, which provides transparency and more.",
+,bc,on,,is a terminal-based calculator.,
+,xorg-xprop,,,is a tool for detecting window properties.,
+,dosfstools,on,,allows your computer to access dos-like filesystems.,
+,libnotify,,,allows desktop notifications.,
+,dunst,,dunst,is a suckless notification system.,
+,exfat-utils,on,,allows management of FAT drives.,
+,sxiv,on,,is a minimalist image viewer.,
+,xwallpaper,,,sets the wallpaper.,
+,ffmpeg,on,,can record and splice video and audio on the command line.,
+,neovim,,vim,a tidier vim with some useful features,
+,polybar,,polybar,is the status bar with all the bells and whistles.,
+,mpd,on,mpd,is a lightweight music daemon.,
+,mpc,on,,is a terminal interface for mpd.,
+,mpv,on,,is the patrician's choice video player.,
+,mpdscribble,on,,scrobbles mpd plays to last.fm.,
+,ncmpcpp,on,ncmpcpp,a ncurses interface for music with multiple formats and a powerful tag editor.,
+,ntfs-3g,,,allows accessing NTFS partitions.,
+A,sc-im,on,,is an Excel-like terminal spreadsheet manager.,
+,maim,on,,can take quick screenshots at your request.,
+,tmux,,tmux,is a terminal multiplexer.,
+,unclutter,on,,hides an inactive mouse.,
+,unrar,on,,extracts rar's.,
+,unzip,on,,unzips zips.,
+,xclip,,,allows for copying and pasting from the command line.,
+,xdotool,,,provides window action utilities on the command line.,
+,xorg-xdpyinfo,,,aids with resolution determination and more.,
+,youtube-dl,on,,can download any YouTube video (or playlist or channel) when given the link.,
+,zathura,on,zathura,is a pdf viewer with vim-like bindings.,
+,zathura-pdf-mupdf,on,,allows mupdf pdf compatibility in zathura.,
+,atool,on,,manages and gives information about archives.,
+,fzf,on,,is a fuzzy finder tool.,
+,highlight,on,,can highlight code output.,
+,acpilight,on,,enables changing screen brightness levels.,
+,zsh,,shell-zsh,is the zoomer shell.,
+,zsh-syntax-highlighting,on,,provides fish-like syntax highlighting in the shell.,
+,zsh-autosuggestions,on,,provides suggestions to commands in the shell.,
+,zsh-history-substring,on,,provides better history searching in the shell.,
+A,dashbinsh,on,,links sh to dash to speed up shell scripts.,
+,ibus,on,,allows for input of non-English languages.,
+,ibus-hangul,on,,allows ibus to input Korean.,
+,ibus-libpinyin,on,,allows ibus to input Chinese.,
+,keepassxc,on,,is a password manager.,
+,lightdm,on,,is a display manager.,
+,lightdm-gtk-greeter,on,,is the theme for lightdm.,
+,light-locker,on,,allows the screen to be locked safely with lightdm.,
+,neofetch,on,,displays computer information so you can flex your distro to plebs.,
+,neomutt,on,,is an email client.,
+A,mutt-wizard-git,on,,is a setup wizard for neomutt by Luke.,
+,pass,on,,is a GPG powered password store.,
+,networkmanager-openconnect,off,,allows connections to Cisco AnyConnect VPN servers.,
+,network-manager-applet,on,,is a GUI applet for NetworkManager.,
+,numlockx,,,allows numlock to be enabled by default on login.,
+,rofi,on,,is an application selector.,
+,dmenu,,,is a neat selector.,
+,rsync,,,is a useful copy utility.,
+,terminus-font,off,,is a tty font that is useful on hidpi displays.,
+,tree,on,,is a command-line tool to view directory structures.,
+,w3m,on,,is a text-based browser but also used for image preview in the terminal too.,
+A,xidlehook,on,,auto-sleeps the computer after a certain inactivity period.,
+,tlp,off,,is an advanced power management tool.,
+,powertop,off,,allows viewing of battery consumption per program.,
+,picard,off,picard,is an audio file tagging tool.,
+A,htop-vim-git,on,,is a task manager.,
+A,notekit-git,off,,is a note taking application.,
+,xournalpp,off,,is a neat PDF annotation tool and touch-screen journal.,
+A,texlive-installer,on,,is the LaTeX installer.,
