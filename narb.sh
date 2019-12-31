@@ -160,6 +160,7 @@ enableservs() {
 	dialog --infobox "Enabling the relevant services based on installs..." 10 50
 	pacman -Qi lightdm >/dev/null && systemctl enable lightdm
 	pacman -Qi tlp >/dev/null && systemctl enable tlp && systemctl enable tlp-sleep
+	pacman -Qi cronie >/dev/null && systemctl enable cronie
 	}
 
 finalize(){ \
