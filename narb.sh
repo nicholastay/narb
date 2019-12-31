@@ -163,7 +163,9 @@ enableservs() {
 	pacman -Qi cronie >/dev/null && systemctl enable cronie
 	}
 
-finalize(){ \
+finalize(){
+	dialog --infobox "Finalising..." 10 50
+	curl -so /home/$name/.config/wall.jpg "https://i.redd.it/z1acw9e9fly21.jpg"
 	dialog --title "All done!" --msgbox "Congrats! Provided there were no hidden errors, the script completed successfully and all the programs and configuration files should be in place." 12 80
 	}
 
