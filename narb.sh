@@ -1,13 +1,13 @@
 #!/bin/sh
 # Luke's Auto Rice Boostrapping Script (NARB)
 # by Luke Smith <luke@lukesmith.xyz>
-# Modified by Nicholas Tay
+# Modified by Nicholas Tay <nkt@outlook.kr>
 # License: GNU GPLv3
 
 ### OPTIONS AND VARIABLES ###
 
 dotfilesrepo="https://github.com/nicholastay/dotfiles.git"
-progsfile="https://raw.githubusercontent.com/nicholastay/narb/master/progs.csv"
+progsfile="https://raw.githubusercontent.com/nicholastay/dotfiles/master/progs.csv"
 aurhelper="yay"
 repobranch="master"
 tostow="desktop fonts git gtk shell shell-bash tools"
