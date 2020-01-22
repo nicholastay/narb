@@ -149,6 +149,8 @@ putgitrepo() { # Downlods a gitrepo $1 and places the files in $2 only overwriti
 	}
 
 setupstows() {
+	rm "/home/$name/.bashrc"
+	rm "/home/$name/.bash_profile"
 	sudo -u "$name" cd /home/$name/.dotfiles && eval "stow --verbose --target=\"/home/$name\" --no-folding $tostow"
 	}
 
@@ -223,6 +225,7 @@ installationloop
 
 # Install the dotfiles in the user's home directory
 putgitrepo "$dotfilesrepo" "/home/$name/.dotfiles" "$repobranch"
+installpkg stow
 setupstows
 
 # Most important command! Get rid of the beep!
