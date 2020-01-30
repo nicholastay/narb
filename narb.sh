@@ -151,7 +151,7 @@ putgitrepo() { # Downlods a gitrepo $1 and places the files in $2 only overwriti
 setupstows() {
 	rm "/home/$name/.bashrc"
 	rm "/home/$name/.bash_profile"
-	sudo -s -u "$name" "cd /home/$name/.dotfiles && stow --verbose --target=\"/home/$name\" --no-folding $tostow"
+	sudo -s -u "$name" eval "cd /home/$name/.dotfiles && stow --verbose --target=\"/home/$name\" --no-folding $tostow"
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
