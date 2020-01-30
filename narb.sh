@@ -161,11 +161,22 @@ systembeepoff() { dialog --infobox "Getting rid of that retarded error beep soun
 	rmmod pcspkr
 	echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf ;}
 
+lightdmadd() {
+	# Additional stuff for lightdm wallpaper, etc
+	dialog --infobox "Setting up additional lightdm config..." 10 50
+	curl -so /usr/share/pixmaps/narb-wall.jpg "https://i.imgur.com/4GJpoGe.jpg"
+	printf "theme-name=Arc-Dark\nbackground=/usr/share/pixmaps/narb-wall.jpg\nfont-name=mono" >> /etc/lightdm/lightdm-gtk-greeter.conf
+	installpkg accountsservice
+	curl -so "/var/lib/AccountsService/icons/$name.png" "https://i.imgur.com/um51YTV.png"
+	printf "[User]\nIcon=/var/lib/AccountsService/icons/$name.png" > /var/lib/AccountsService/users/$name
+	chmod 644 /var/lib/AccountsService/icons/$name.png /var/lib/AccountsService/users/$name
+	}
+
 enableservs() {
 	dialog --infobox "Enabling the relevant services based on installs..." 10 50
-	pacman -Qi lightdm >/dev/null && systemctl enable lightdm
 	pacman -Qi tlp >/dev/null && systemctl enable tlp && systemctl enable tlp-sleep
 	pacman -Qi cronie >/dev/null && systemctl enable cronie
+	pacman -Qi lightdm >/dev/null && systemctl enable lightdm && lightdmadd
 	}
 
 finalize(){
