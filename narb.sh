@@ -149,9 +149,12 @@ putgitrepo() { # Downlods a gitrepo $1 and places the files in $2 only overwriti
 	}
 
 setupstows() {
+	dialog --infobox "Setting up stow modules..." 10 50
 	rm "/home/$name/.bashrc"
 	rm "/home/$name/.bash_profile"
 	sudo -s -u "$name" eval "cd /home/$name/.dotfiles && stow --verbose --target=\"/home/$name\" --no-folding $tostow"
+	dialog --infobox "Loading in dconf settings if they exist..." 10 50
+	[ -f "/home/$name/.dotfiles/dconf.ini" ] && sudo -u "$name" dconf load / < "/home/$name/.dotfiles/dconf.ini"
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
