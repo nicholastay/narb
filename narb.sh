@@ -190,12 +190,19 @@ setupblperms() {
 	usermod -a -G video "$name"
 }
 
+runtexlive() {
+	dialog --title "NARB Addition" --yesno "The TeX Live Installer was detected. Would you like to run the installer now?" 6 70
+	clear
+	[ -f "/home/$name/.dotfiles/texlive.profile" ] && /opt/texlive-installer/install-tl -init-from-profile "/home/$name/.dotfiles/texlive.profile" || /opt/texlive-installer/install-tl
+	}
+
 enableservs() {
 	dialog --infobox "Enabling the relevant services based on installs..." 10 50
 	pacman -Qi tlp >/dev/null && systemctl enable tlp && systemctl enable tlp-sleep
 	pacman -Qi cronie >/dev/null && systemctl enable cronie
 	pacman -Qi acpilight >/dev/null && setupblperms
 	pacman -Qi lightdm >/dev/null && systemctl enable lightdm && lightdmadd
+	pacman -Qi texlive-installer >/dev/null && runtexlive
 	}
 
 finalize(){
