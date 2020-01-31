@@ -205,6 +205,35 @@ enableservs() {
 	pacman -Qi texlive-installer >/dev/null && runtexlive
 	}
 
+thinkpadset() {
+	if grep -q "ThinkPad" /sys/class/dmi/id/product_family; then
+		dialog --infobox "Applying ThinkPad specific tweaks..."
+
+		installpkg xorg-xinput
+		# https://wiki.archlinux.org/index.php/TrackPoint
+		# Prefer evdev for trackpoint usage
+		if xinput --list | grep -q "TPPS/2 IBM TrackPoint"; then
+			installpkg xf86-input-evdev
+			cat << EOF > /etc/X11/xorg.conf.d/20-thinkpad.conf
+Section "InputClass"
+    Identifier	"Trackpoint Wheel Emulation"
+    Driver "evdev"
+    MatchProduct	"TPPS/2 IBM TrackPoint"
+    MatchDevicePath	"/dev/input/event*"
+    Option		"EmulateWheel"		"true"
+    Option		"EmulateWheelButton"	"2"
+    Option		"Emulate3Buttons"	"false"
+    Option		"XAxisMapping"		"6 7"
+    Option		"YAxisMapping"		"4 5"
+EndSection
+EOF
+		fi
+
+		# ThinkPad specific modules for tlp
+		pacman -Qi tlp >/dev/null && installpkg tp-smapi && installpkg acpi_call
+	fi
+	}
+
 finalize(){
 	dialog --infobox "Finalising..." 10 50
 	curl -Lso /home/$name/.config/wall.jpg "https://raw.githubusercontent.com/nicholastay/personal/master/images/stywo-pink-hills.jpg"
@@ -273,6 +302,9 @@ systembeepoff
 
 # Enable services based on installs
 enableservs
+
+# Thinkpad checks
+thinkpadset
 
 # This line, overwriting the `newperms` command above will allow the user to run
 # serveral important commands, `shutdown`, `reboot`, updating, etc. without a password.
