@@ -47,7 +47,7 @@ preinstallmsg() { \
 adduserandpass() { \
 	# Adds user `$name` with password $pass1.
 	dialog --infobox "Adding user \"$name\"..." 4 50
-	useradd -m -g wheel -s /bin/bash "$name" >/dev/null 2>&1 ||
+	useradd -m -G wheel -s /bin/bash "$name" >/dev/null 2>&1 ||
 	usermod -a -G wheel "$name" && mkdir -p /home/"$name" && chown "$name":wheel /home/"$name"
 	echo "$name:$pass1" | chpasswd
 	unset pass1 pass2 ;}
@@ -165,17 +165,36 @@ lightdmadd() {
 	# Additional stuff for lightdm wallpaper, etc
 	dialog --infobox "Setting up additional lightdm config..." 10 50
 	curl -so /usr/share/pixmaps/narb-wall.jpg "https://i.imgur.com/4GJpoGe.jpg"
-	printf "theme-name=Arc-Dark\nbackground=/usr/share/pixmaps/narb-wall.jpg\nfont-name=mono" >> /etc/lightdm/lightdm-gtk-greeter.conf
+	cat <<- EOF >> /etc/lightdm/lightdm-gtk-greeter.conf
+		theme-name=Arc-Dark
+		background=/usr/share/pixmaps/narb-wall.jpg
+		font-name=mono
+	EOF
 	installpkg accountsservice
 	curl -so "/var/lib/AccountsService/icons/$name.png" "https://i.imgur.com/um51YTV.png"
-	printf "[User]\nIcon=/var/lib/AccountsService/icons/$name.png" > /var/lib/AccountsService/users/$name
+	cat <<- EOF > /var/lib/AccountsService/users/$name
+		[User]
+		Icon=/var/lib/AccountsService/icons/$name.png
+	EOF
 	chmod 644 /var/lib/AccountsService/icons/$name.png /var/lib/AccountsService/users/$name
 	}
+
+setupblperms() {
+	# Additional permission setups for acpilight control
+	# https://gitlab.com/wavexx/acpilight
+	cat <<- EOF > /etc/udev/rules.d/90-backlight.rules
+		SUBSYSTEM=="backlight", ACTION=="add", \
+		  RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness", \
+		  RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
+	EOF
+	usermod -a -G video "$name"
+}
 
 enableservs() {
 	dialog --infobox "Enabling the relevant services based on installs..." 10 50
 	pacman -Qi tlp >/dev/null && systemctl enable tlp && systemctl enable tlp-sleep
 	pacman -Qi cronie >/dev/null && systemctl enable cronie
+	pacman -Qi acpilight >/dev/null && setupblperms
 	pacman -Qi lightdm >/dev/null && systemctl enable lightdm && lightdmadd
 	}
 
