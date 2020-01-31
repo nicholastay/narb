@@ -164,14 +164,14 @@ systembeepoff() { dialog --infobox "Getting rid of that retarded error beep soun
 lightdmadd() {
 	# Additional stuff for lightdm wallpaper, etc
 	dialog --infobox "Setting up additional lightdm config..." 10 50
-	curl -so /usr/share/pixmaps/narb-wall.jpg "https://i.imgur.com/4GJpoGe.jpg"
+	curl -Lso /usr/share/pixmaps/narb-wall.jpg "https://raw.githubusercontent.com/nicholastay/personal/master/images/masterteacher-waterfall-sunset.jpg"
 	cat <<- EOF >> /etc/lightdm/lightdm-gtk-greeter.conf
 		theme-name=Arc-Dark
 		background=/usr/share/pixmaps/narb-wall.jpg
 		font-name=mono
 	EOF
 	installpkg accountsservice
-	curl -so "/var/lib/AccountsService/icons/$name.png" "https://i.imgur.com/um51YTV.png"
+	curl -Lso "/var/lib/AccountsService/icons/$name.png" "https://raw.githubusercontent.com/nicholastay/personal/master/images/penguin-icon.png"
 	cat <<- EOF > /var/lib/AccountsService/users/$name
 		[User]
 		Icon=/var/lib/AccountsService/icons/$name.png
@@ -207,7 +207,7 @@ enableservs() {
 
 finalize(){
 	dialog --infobox "Finalising..." 10 50
-	curl -so /home/$name/.config/wall.jpg "https://i.redd.it/z1acw9e9fly21.jpg"
+	curl -Lso /home/$name/.config/wall.jpg "https://raw.githubusercontent.com/nicholastay/personal/master/images/stywo-pink-hills.jpg"
 	dialog --title "All done!" --msgbox "Congrats! Provided there were no hidden errors, the script completed successfully and all the programs and configuration files should be in place." 12 80
 	}
 
