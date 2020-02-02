@@ -10,7 +10,6 @@ dotfilesrepo="https://github.com/nicholastay/dotfiles.git"
 progsfile="https://raw.githubusercontent.com/nicholastay/dotfiles/master/progs.csv"
 aurhelper="yay"
 repobranch="master"
-tostow="desktop fonts git gtk shell shell-bash tools"
 
 ### FUNCTIONS ###
 installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
@@ -104,6 +103,8 @@ loadprogs() { \
 	optionallist=""
 	[ -f "/tmp/progs_filtered.csv" ] && rm /tmp/progs_filtered.csv
 	while IFS=, read -r tag program optionals stowdir comment; do
+		# Load default stow dirs from meta entry
+		[ "$program" = "_stow" ] && tostow="$stowdir" && continue
 		echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
 		if [ ! -z "$optionals" ]; then
 			optionallist="$optionallist \"$program\" \"$comment\" \"$optionals\""
