@@ -200,8 +200,8 @@ setupblperms() {
 }
 
 runtexlive() {
-	dialog --title "NARB Addition" --yesno "The TeX Live Installer was detected. Would you like to run the installer now?" 6 70
-	clear
+	dialog --title "NARB Addition" --yesno "The TeX Live Installer was detected. Would you like to run the installer now?" 6 70 && \
+	clear && \
 	[ -f "/home/$name/.dotfiles/texlive.profile" ] && /opt/texlive-installer/install-tl -init-from-profile "/home/$name/.dotfiles/texlive.profile" || /opt/texlive-installer/install-tl
 	}
 
