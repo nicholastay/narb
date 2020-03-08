@@ -6,7 +6,7 @@
 
 ### OPTIONS AND VARIABLES ###
 while getopts ":a:r:b:p:h" o; do case "${o}" in
-	h) printf "Optional arguments for custom use:\\n  -r: stow-based dotfiles repository (local file or url)\\n  -p: Dependencies and programs csv (local file or url)\\n  -a: AUR helper (must have pacman-like syntax)\\n  -h: Show this message\\n" && exit ;;
+	h) printf "Optional arguments for custom use:\\n  -r: dotfiles repository (local file or url)\\n  -p: Dependencies and programs csv (local file or url)\\n  -a: AUR helper (must have pacman-like syntax)\\n  -h: Show this message\\n" && exit ;;
 	r) dotfilesrepo=${OPTARG} && git ls-remote "$dotfilesrepo" || exit ;;
 	b) repobranch=${OPTARG} ;;
 	p) progsfile=${OPTARG} ;;
@@ -15,7 +15,7 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 esac done
 
 [ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/nicholastay/dotfiles.git"
-[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/nicholastay/dotfiles/master/progs.csv"
+[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/nicholastay/dotfiles/master/.local/narb/progs.csv"
 [ -z "$aurhelper" ] && aurhelper="yay"
 [ -z "$repobranch" ] && repobranch="master"
 
@@ -54,8 +54,8 @@ preinstallmsg() { \
 adduserandpass() { \
 	# Adds user `$name` with password $pass1.
 	dialog --infobox "Adding user \"$name\"..." 4 50
-	useradd -m -G wheel -s /bin/bash "$name" >/dev/null 2>&1 ||
-	usermod -a -G wheel "$name" && mkdir -p /home/"$name" && chown "$name":wheel /home/"$name"
+	useradd -m -G wheel,video -s /bin/bash "$name" >/dev/null 2>&1 ||
+	usermod -a -G wheel,video "$name" && mkdir -p /home/"$name" && chown "$name":"$name" /home/"$name"
 	echo "$name:$pass1" | chpasswd
 	unset pass1 pass2 ;}
 
@@ -96,7 +96,7 @@ gitmakeinstall() {
 aurinstall() { \
 	dialog --title "NARB Installation" --infobox "Installing \`$1\` ($n of $total) from the AUR. $1 $2" 5 70
 	echo "$aurinstalled" | grep "^$1$" >/dev/null 2>&1 && return
-	sudo -u "$name" $aurhelper -S --noconfirm "$1" >/dev/null 2>&1
+	sudo -u "$name" yes | $aurhelper -S --noconfirm "$1" >/dev/null 2>&1
 	}
 
 pipinstall() { \
@@ -110,23 +110,21 @@ loadprogs() { \
 	([ -f "$progsfile" ] && cp "$progsfile" /tmp/progs.csv) || curl -Ls "$progsfile" | sed '/^#/d' > /tmp/progs.csv
 	optionallist=""
 	[ -f "/tmp/progs_filtered.csv" ] && rm /tmp/progs_filtered.csv
-	while IFS=, read -r tag program optionals stowdir comment; do
-		# Load default stow dirs from meta entry
-		[ "$program" = "_stow" ] && tostow="$stowdir" && continue
+	while IFS=, read -r tag program optionals comment; do
 		echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
 		if [ ! -z "$optionals" ]; then
 			optionallist="$optionallist \"$program\" \"$comment\" \"$optionals\""
 		else
-			echo "$tag,$program,$stowdir,$comment" >> /tmp/progs_filtered.csv
+			echo "$tag,$program,$comment" >> /tmp/progs_filtered.csv
 		fi
 	done < /tmp/progs.csv
 	eval "dialog --title \"NARB Installation\" --separate-output --checklist \"Select optional programs.\" 45 80 8$optionallist" 1>&2 2>/tmp/prog_opts 3>&1
 	# now need to go thru again to filter out right ones
 	# inefficient but whatever...
-	while IFS=, read -r tag program optionals stowdir comment; do
+	while IFS=, read -r tag program optionals comment; do
 		if grep -xq "$program" /tmp/prog_opts; then
 			echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
-			echo "$tag,$program,$stowdir,$comment" >> /tmp/progs_filtered.csv
+			echo "$tag,$program,$comment" >> /tmp/progs_filtered.csv
 		fi
 	done < /tmp/progs.csv
 	}
@@ -134,9 +132,8 @@ loadprogs() { \
 installationloop() { \
 	total=$(wc -l < /tmp/progs_filtered.csv)
 	aurinstalled=$(pacman -Qqm)
-	while IFS=, read -r tag program stowdir comment; do
+	while IFS=, read -r tag program comment; do
 		n=$((n+1))
-		[ ! -z "$stowdir" ] && tostow="$tostow $stowdir"
 		echo "$comment" | grep "^\".*\"$" >/dev/null 2>&1 && comment="$(echo "$comment" | sed "s/\(^\"\|\"$\)//g")"
 		case "$tag" in
 			"A") aurinstall "$program" "$comment" ;;
@@ -151,19 +148,10 @@ putgitrepo() { # Downlods a gitrepo $1 and places the files in $2 only overwriti
 	dialog --infobox "Downloading and installing config files..." 4 60
 	[ -z "$3" ] && branch="master" || branch="$repobranch"
 	dir=$(mktemp -d)
-	[ ! -d "$2" ] && mkdir -p "$2" && chown -R "$name:wheel" "$2"
-	chown -R "$name:wheel" "$dir"
+	[ ! -d "$2" ] && mkdir -p "$2" && chown -R "$name:$name" "$2"
+	chown -R "$name:$name" "$dir"
 	sudo -u "$name" git clone -b "$branch" "$1" "$dir/gitrepo" >/dev/null 2>&1 &&
 	sudo -u "$name" cp -rfT "$dir/gitrepo" "$2"
-	}
-
-setupstows() {
-	dialog --infobox "Setting up stow modules..." 10 50
-	rm "/home/$name/.bashrc"
-	rm "/home/$name/.bash_profile"
-	sudo -s -u "$name" eval "cd /home/$name/.dotfiles && stow --verbose --target=\"/home/$name\" --no-folding $tostow"
-	dialog --infobox "Loading in dconf settings if they exist..." 10 50
-	[ -f "/home/$name/.dotfiles/dconf.ini" ] && sudo -u "$name" dconf load / < "/home/$name/.dotfiles/dconf.ini"
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
@@ -302,9 +290,10 @@ loadprogs
 installationloop
 
 # Install the dotfiles in the user's home directory
-putgitrepo "$dotfilesrepo" "/home/$name/.dotfiles" "$repobranch"
-installpkg stow
-setupstows
+putgitrepo "$dotfilesrepo" "/home/$name" "$repobranch"
+rm -f "/home/$name/readme.md"
+# Switch to our correct config for workdir/bare (having .git recurse always into home is bad...)
+sudo -u "$name" mv "/home/$name/.git" "/home/$name/.dotfiles.git"
 
 # Most important command! Get rid of the beep!
 systembeepoff
