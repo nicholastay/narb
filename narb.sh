@@ -20,6 +20,8 @@ esac done
 [ -z "$repobranch" ] && repobranch="master"
 
 ### FUNCTIONS ###
+ifinstalled(){ pacman -Qi "$1" >/dev/null 2>&1 ;}
+
 installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
 
 error() { clear; printf "ERROR:\\n%s\\n" "$1"; exit;}
@@ -195,11 +197,11 @@ runtexlive() {
 
 enableservs() {
 	dialog --infobox "Enabling the relevant services based on installs..." 10 50
-	pacman -Qi tlp >/dev/null && systemctl enable tlp && systemctl enable tlp-sleep
-	pacman -Qi cronie >/dev/null && systemctl enable cronie
-	pacman -Qi acpilight >/dev/null && setupblperms
-	pacman -Qi lightdm >/dev/null && systemctl enable lightdm && lightdmadd
-	pacman -Qi texlive-installer >/dev/null && runtexlive
+	ifinstalled tlp && systemctl enable tlp && systemctl enable tlp-sleep
+	ifinstalled cronie && systemctl enable cronie
+	ifinstalled acpilight && setupblperms
+	ifinstalled lightdm && systemctl enable lightdm && lightdmadd
+	ifinstalled texlive-installer && runtexlive
 	}
 
 thinkpadset() {
@@ -227,7 +229,7 @@ EOF
 		fi
 
 		# ThinkPad specific modules for tlp
-		pacman -Qi tlp >/dev/null && installpkg tp-smapi && installpkg acpi_call
+		ifinstalled tlp && installpkg tp-smapi && installpkg acpi_call
 	fi
 	}
 
@@ -316,4 +318,6 @@ sed -i "s/^$name:\(.*\):\/bin\/.*/$name:\1:\/bin\/zsh/" /etc/passwd
 finalize
 clear
 echo "Thanks for using NARB."
-echo "If you installed lightdm, you should probably restart."
+echo ""
+ifinstalled lightdm && echo "Since you installed lightdm, you should probably restart." || echo "Feel free to log out and log into your new user and get going right away! X should start automatically."
+ifinstalled plymouth-git && echo "\nSince you installed plymouth, note that you must configure it manually. See the Arch Wiki for guidance. A better watermark.png for the spinner theme can be found in .local/narb under your home folder."
